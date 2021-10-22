@@ -17,5 +17,8 @@
   "homepage": "https://github.com/zkpnftdrop/project#readme",
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "typescript": "^4.4.4"
   }
 }
