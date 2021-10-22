@@ -2,6 +2,12 @@
 
 ## Development
 
+Install `circom-helper` dependencies:
+
+```
+sudo apt-get install libgmp-dev nlohmann-json3-dev nasm g++
+```
+
 Install circom v2:
 
 https://docs.circom.io/
