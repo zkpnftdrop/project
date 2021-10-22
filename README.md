@@ -29,3 +29,20 @@ Update `./circuits/circomHelperConfig.json`:
     ]
 }
 ```
+
+During development, you can make Typescript recompile code automatically
+whenever you save a file in `ts/`. In each module:
+
+```bash
+npm run watch
+```
+
+### Circuit development
+
+Make sure nothing else is running on port 9001.
+
+In `circuits/`:
+
+```bash
+npm run circom-helper
+```
