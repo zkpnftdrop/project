@@ -4,6 +4,7 @@
     "description": "",
     "main": "build/index.js",
     "scripts": {
+        "circom-helper": "npx circom-helper -c ./circomHelperConfig.json -b ./build/test/ -p 9001",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
