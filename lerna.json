@@ -1,0 +1,8 @@
+{
+    "packages":[
+        "contracts",
+        "cli",
+        "circuits"
+    ],
+    "version":"1.0.0"
+}

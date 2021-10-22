@@ -1,0 +1,25 @@
+{
+    "name": "zkpnftdrop-circuits",
+    "version": "1.0.0",
+    "description": "",
+    "main": "build/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/zkpnftdrop/project.git"
+    },
+    "author": "ismaeldm95, leolara, weijiekoh",
+    "bugs": {
+        "url": "https://github.com/zkpnftdrop/project/issues"
+    },
+    "homepage": "https://github.com/zkpnftdrop/project#readme",
+    "dependencies": {
+        "snarkjs": "0.4.10"
+    },
+    "devDependencies": {
+        "circom-helper": "^0.3.0",
+        "lerna": "^4.0.0"
+    }
+}
