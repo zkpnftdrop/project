@@ -1,7 +1,7 @@
-import {
-    proofGen,
-} from './proofGen'
+//import {
+    //proofGen,
+//} from './proofGen'
 
-export {
-    proofGen,
-}
+//export {
+    //proofGen,
+//}
