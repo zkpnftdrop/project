@@ -13,6 +13,19 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
+  const signers = await ethers.getSigners();
+  const Poseidon = await ethers.getContractFactory("PoseidonT3", signers[0]);
+  const poseidon = await Poseidon.deploy();
+  await poseidon.deployed();
+
+  const NFT = await ethers.getContractFactory("ZKPNFTDrop", {
+    libraries: {
+      PoseidonT3: poseidon.address,
+    },
+  });
+  const nft = await NFT.deploy(9999, 10000, 1000);
+  await nft.deployed();
+
   // We get the contract to deploy
   const Greeter = await ethers.getContractFactory("Greeter");
   const greeter = await Greeter.deploy("Hello, Hardhat!");
