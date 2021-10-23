@@ -12,7 +12,9 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
         uint256 tokenId;
     }
 
-    uint256 ZERO_VALUE = uint256(keccak256(abi.encodePacked('Maci'))) % SNARK_SCALAR_FIELD;
+    uint256 internal constant ZERO_VALUE = uint256(keccak256(abi.encodePacked('Maci'))) % SNARK_SCALAR_FIELD;
+    uint32 internal MAX_MINTERS = 7;
+    uint32 internal VERIFY_PERIOD = 8000;
 
     uint256 public price;
     uint256 public hashOfTeamSecret;
@@ -20,7 +22,6 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
     uint256 public buyDeadline;
 
     mapping (uint => Minter) minters;
-    mapping (address => uint) minterReverse;
 
     using Counters for Counters.Counter;
     Counters.Counter mintersCounter;
@@ -38,9 +39,8 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
         require(block.number < buyDeadline, "buy deadline passed");
 
         uint minterId = mintersCounter.current();
-        require(minterId < 7, "all tokens minted"); // TODO parametrize max number of minters
+        require(minterId < MAX_MINTERS, "all tokens minted"); // TODO parametrize max number of minters
 
-        minterReverse[msg.sender] = minterId;
         minters[minterId].owner = msg.sender;
         minters[minterId].hashOfSecret = hashOfSecret;
         minters[minterId].tokenId = minterId; // shoufled with the result secret later
@@ -50,7 +50,7 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
 
     function verify(uint256 result, bytes memory zkp) public {
         require(block.number > buyDeadline, "buy deadline not passed");
-        require(block.number < buyDeadline + 7000, "verify deadline passed");
+        require(block.number < buyDeadline + VERIFY_PERIOD, "verify deadline passed");
         // TODO: verify zkp
 
 
