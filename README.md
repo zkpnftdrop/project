@@ -52,3 +52,22 @@ In `circuits/`:
 ```bash
 npm run circom-helper
 ```
+
+### Build circuits for the demo
+
+For the demo, we are using a tree depth of 5 (TBD). This can be configured in
+`circuits/zkeys.config.yml`.
+
+In `circuits/`:
+
+```bash
+npm run zkey-manager-compile
+npm run zkey-manager-downloadPtau
+npm run zkey-manager-genZkeys
+```
+
+Export the verifier contract:
+
+```
+npm run export-verifier-sol
+```
