@@ -2,6 +2,24 @@
 
 ## Development
 
+Install `rapidsnark`:
+
+```bash
+sudo apt-get install build-essential libgmp-dev libsodium-dev nasm
+```
+
+```bash
+git clone https://github.com/iden3/rapidsnark.git && \
+cd rapidsnark && \
+npm install && \
+git submodule init && \
+git submodule update && \
+npx task createFieldSources && \
+npx task buildProver
+```
+
+Rapidsnark is now in `build/prover`.
+
 Install `circom-helper` dependencies:
 
 ```
