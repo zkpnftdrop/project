@@ -41,13 +41,13 @@ describe('NDF drop test', () => {
         console.log("test hash: " + hash2([BigInt(1),BigInt(1)]));
 
 
-        var hashOnion = hash2([leaves[1], leaves[0]]);
+        var hashOnion = hash2([secrets[1], secrets[0]]);
         
         console.log(hashOnion);
         
     
         for(var i = 2; i < numLeaves; i++) {
-            hashOnion = hash2([leaves[i], hashOnion])
+            hashOnion = hash2([secrets[i], hashOnion])
             console.log(hashOnion);
         }
 
