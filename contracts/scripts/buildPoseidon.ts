@@ -1,5 +1,5 @@
 // @ts-ignore
-import { overwriteArtifact } from "hardhat-artifactor";
+import { overwriteArtifact } from "hardhat";
 // @ts-ignore
 // eslint-disable-next-line camelcase
 import { poseidon_gencontract } from "circomlibjs";

@@ -39,7 +39,7 @@ git clone git@github.com:zkpnftdrop/project.git && \
 cd project && \
 npm i && \
 npx lerna bootstrap && \
-npx lerna build
+npx lerna run build
 ```
 
 Update `./circuits/circomHelperConfig.json`:

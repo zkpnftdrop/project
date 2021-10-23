@@ -1,7 +1,13 @@
 // @ts-ignore
-import { IncrementalQuinTree, hash1 } from "zkpnftdrop-circuits";
+import {
+  IncrementalQuinTree,
+  hash2,
+  stringifyBigInts
+// @ts-ignore
+} from "zkpnftdrop-circuits";
 
 import * as chai from "chai";
+import * as fs from "fs";
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -121,18 +127,30 @@ describe("ZKP NFT Drop", function () {
 
     await mine(hre)(buyDeadline);
 
-    console.log(await contract.root());
-
     const LEVELS = 3;
-    const ZERO_VALUE = 0;
-      
+    const ZERO_VALUE = BigInt("8370432830353022751713833565135785980866757267633941821328460903436894336785");
 
-    const tree = new IncrementalQuinTree(LEVELS, ZERO_VALUE, 2, hash1);
+    const tree = new IncrementalQuinTree(LEVELS, ZERO_VALUE, 2, hash2);
     tree.insert(hashOfTeamSecret);
     tree.insert(hashOMinter1Secret);
     tree.insert(hashOMinter2Secret);
     tree.insert(hashOMinter3Secret);
-    console.log(tree.root);
+
+      const circuitInputs = stringifyBigInts({
+        root: tree.root,
+        randNums: [
+          hashOfTeamSecret,
+          hashOMinter1Secret,
+          hashOMinter2Secret,
+          hashOMinter3Secret,
+          ZERO_VALUE,
+          ZERO_VALUE,
+          ZERO_VALUE,
+          ZERO_VALUE,
+        ],
+      });
+    fs.writeFileSync("testInput.json", JSON.stringify(circuitInputs));
+
 
     const result = 909090;
     const zkp = [0, 0, 0, 0, 0, 0, 0, 0].map((x) => ethers.BigNumber.from(x));
