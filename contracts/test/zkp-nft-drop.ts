@@ -1,5 +1,5 @@
 // @ts-ignore
-import { proofGen, } from 'zkpnftdrop-cli'
+import { IncrementalQuinTree, hash1 } from "zkpnftdrop-circuits";
 
 import * as chai from "chai";
 const chaiAsPromised = require("chai-as-promised");
@@ -120,6 +120,19 @@ describe("ZKP NFT Drop", function () {
     await contract.connect(addr3).buy(hashOMinter3Secret, { value: price });
 
     await mine(hre)(buyDeadline);
+
+    console.log(await contract.root());
+
+    const LEVELS = 3;
+    const ZERO_VALUE = 0;
+      
+
+    const tree = new IncrementalQuinTree(LEVELS, ZERO_VALUE, 2, hash1);
+    tree.insert(hashOfTeamSecret);
+    tree.insert(hashOMinter1Secret);
+    tree.insert(hashOMinter2Secret);
+    tree.insert(hashOMinter3Secret);
+    console.log(tree.root);
 
     const result = 909090;
     const zkp = [0, 0, 0, 0, 0, 0, 0, 0].map((x) => ethers.BigNumber.from(x));
