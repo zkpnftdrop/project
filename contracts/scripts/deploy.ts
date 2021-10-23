@@ -18,12 +18,16 @@ async function main() {
   const poseidon = await Poseidon.deploy();
   await poseidon.deployed();
 
+  const Verifier = await ethers.getContractFactory("MockVerifier");
+  const verifier = await Verifier.deploy();
+  await verifier.deployed();
+
   const NFT = await ethers.getContractFactory("ZKPNFTDrop", {
     libraries: {
       PoseidonT3: poseidon.address,
     },
   });
-  const nft = await NFT.deploy(9999, 10000, 1000);
+  const nft = await NFT.deploy(9999, 10000, 1000, verifier.address);
   await nft.deployed();
 
   // We get the contract to deploy

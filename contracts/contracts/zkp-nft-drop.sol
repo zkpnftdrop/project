@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./IMT/IncrementalMerkleTree.sol";
+import { IVerifier } from "./IVerifier.sol";
 
 contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
     struct Minter {
@@ -26,11 +27,22 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
     using Counters for Counters.Counter;
     Counters.Counter mintersCounter;
 
-    constructor(uint256 _price, uint256 _hashOfTeamSecret, uint256 _buyDeadline) ERC721("ZKPNFTDrop", "ZKPNFT$") IncrementalMerkleTree(3, ZERO_VALUE, true) {
+    IVerifier public verifier;
+
+    constructor(
+        uint256 _price,
+        uint256 _hashOfTeamSecret,
+        uint256 _buyDeadline,
+        IVerifier _verifier
+    )
+    ERC721("ZKPNFTDrop", "ZKPNFT$")
+    IncrementalMerkleTree(3, ZERO_VALUE, true)
+    {
         price = _price;
         hashOfTeamSecret = _hashOfTeamSecret;
         insertLeaf(hashOfTeamSecret);
         buyDeadline = _buyDeadline;
+        verifier = _verifier;
     }
 
     function buy(uint256 hashOfSecret) public payable {
@@ -48,11 +60,18 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
         insertLeaf(hashOfSecret);
     }
 
-    function verify(uint256 result, bytes memory zkp) public {
+    function verify(
+        uint256 result,
+        uint256[8] memory proof
+    ) public {
         require(block.number > buyDeadline, "buy deadline not passed");
         require(block.number < buyDeadline + VERIFY_PERIOD, "verify deadline passed");
-        // TODO: verify zkp
 
+        uint256[2] memory publicSignals = [result, root];
+
+        bool isValid = verifier.verify(proof, publicSignals);
+
+        require(isValid, "invalid proof");
 
         // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
         for (uint i = mintersCounter.current() -1; i > 0; i--) {

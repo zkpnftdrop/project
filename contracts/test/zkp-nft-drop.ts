@@ -1,3 +1,6 @@
+// @ts-ignore
+import { proofGen, } from 'zkpnftdrop-cli'
+
 import * as chai from "chai";
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
@@ -50,13 +53,22 @@ describe("ZKP NFT Drop", function () {
     const poseidon = await Poseidon.deploy();
     await poseidon.deployed();
 
+    const Verifier = await ethers.getContractFactory("MockVerifier", creator);
+    const verifier = await Verifier.deploy();
+    await verifier.deployed();
+
     factory = await ethers.getContractFactory("ZKPNFTDrop", {
       libraries: {
         PoseidonT3: poseidon.address,
       },
     });
 
-    contract = await factory.deploy(price, hashOfTeamSecret, buyDeadline);
+    contract = await factory.deploy(
+      price,
+      hashOfTeamSecret,
+      buyDeadline,
+      verifier.address
+    );
   });
 
   it("Can deploy NFT", async function () {
@@ -110,8 +122,9 @@ describe("ZKP NFT Drop", function () {
     await mine(hre)(buyDeadline);
 
     const result = 909090;
-    const zkp = [3, 5, 6];
+    const zkp = [0, 0, 0, 0, 0, 0, 0, 0].map((x) => ethers.BigNumber.from(x));
 
+    // @ts-ignore
     await contract.connect(creator).verify(result, zkp);
   });
 });

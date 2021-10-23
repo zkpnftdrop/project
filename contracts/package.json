@@ -17,6 +17,9 @@
         "url": "https://github.com/zkpnftdrop/project/issues"
     },
     "homepage": "https://github.com/zkpnftdrop/project#readme",
+    "dependencies": {
+        "zkpnftdrop-cli": "1.0.0"
+    },
     "devDependencies": {
         "@nomiclabs/hardhat-ethers": "^2.0.2",
         "@nomiclabs/hardhat-etherscan": "^2.1.7",
