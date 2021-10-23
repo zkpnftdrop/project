@@ -11,6 +11,11 @@ const stringifyBigInts: (obj: object) => any = ff.utils.stringifyBigInts
 
 import { poseidon } from 'circomlibjs'
 
+// Hash 1 element
+const hash1 = (inputs: BigInt[]) => {
+    return poseidon(inputs)
+}
+
 // Hash up to 5 elements
 const hash5 = (inputs: BigInt[]) => {
     assert(inputs.length === 5)
@@ -55,6 +60,7 @@ export {
     genRandomSalt,
     genWitness,
     getSignalByName,
+    hash1,
     hash2,
     hash5,
     stringifyBigInts,

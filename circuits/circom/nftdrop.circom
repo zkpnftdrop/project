@@ -37,6 +37,12 @@ template NftDrop(levels) {
     // it to the output.
     // result <== <HASH ONION>;
     
+    component testhash = HashLeftRight();
+    testhash.left <== 1;
+    testhash.right <== 1;
+    log(testhash.hash);
+
+
 
     var numHashes = numLeaves - 1;
     component hashOnionArray[numHashes];
@@ -45,11 +51,14 @@ template NftDrop(levels) {
     hashOnionArray[0].right <== randNums[0];
     hashOnionArray[0].left <== randNums[1];
     
+    log(hashOnionArray[0].hash);
 
     for (var i = 1; i < numHashes; i ++) {
         hashOnionArray[i] = HashLeftRight();
         hashOnionArray[i].right <== hashOnionArray[i - 1].hash;
         hashOnionArray[i].left <== randNums[i + 1];
+
+        log(hashOnionArray[i].hash);
     }
 
     result <== hashOnionArray[numHashes - 1].hash;
