@@ -7,13 +7,9 @@ template NftDrop(levels) {
     var numLeaves = 2 ** levels;
     signal input root;
     signal input randNums[numLeaves];
-    signal output result;
-
-    //TODO: Instead of the following, just use CheckRoot!
-    /*signal input pathElements[numLeaves][1];*/
-    /*signal input pathIndices[numLeaves];*/
 
     // The hash onion is the resulting random value
+    signal output result;
 
     // ------------------------------------------------------------------------
     // 1. Prove that, for each randNum, it exists in the Merkle tree with the
@@ -32,17 +28,11 @@ template NftDrop(levels) {
     }
 
     root === checkRoot.root;
+
     // ------------------------------------------------------------------------
     // 2. Compute the hash onion of randNums and the team's secret and assign
     // it to the output.
     // result <== <HASH ONION>;
-    
-    component testhash = HashLeftRight();
-    testhash.left <== 1;
-    testhash.right <== 1;
-    log(testhash.hash);
-
-
 
     var numHashes = numLeaves - 1;
     component hashOnionArray[numHashes];
@@ -51,14 +41,10 @@ template NftDrop(levels) {
     hashOnionArray[0].right <== randNums[0];
     hashOnionArray[0].left <== randNums[1];
     
-    log(hashOnionArray[0].hash);
-
     for (var i = 1; i < numHashes; i ++) {
         hashOnionArray[i] = HashLeftRight();
         hashOnionArray[i].right <== hashOnionArray[i - 1].hash;
         hashOnionArray[i].left <== randNums[i + 1];
-
-        log(hashOnionArray[i].hash);
     }
 
     result <== hashOnionArray[numHashes - 1].hash;

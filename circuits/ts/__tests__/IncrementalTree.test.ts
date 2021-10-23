@@ -2,7 +2,7 @@ import * as assert from 'assert'
 const ff = require('ffjavascript')
 
 import { IncrementalQuinTree } from '../IncrementalTree'
-import { hash2, genRandomSalt, stringifyBigInts } from './utils'
+import { hash2, genRandomSalt, stringifyBigInts } from '../utils'
 
 const ZERO_VALUE = BigInt(0)
 const DEPTH = 3

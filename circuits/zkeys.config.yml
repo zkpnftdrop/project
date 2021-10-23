@@ -8,7 +8,7 @@ snarkjsPath: "./node_modules/snarkjs/build/cli.cjs"
 circuits:
 - template: "./circom/nftdrop.circom"
   component: "NftDrop"
-  params: [5]
+  params: [3]
   pubInputs: ["root"]
   type: "prod"
 

@@ -1,5 +1,5 @@
 jest.setTimeout(90000)
-jest.setTimeout(90000)
+import * as fs from 'fs'
 import { 
     genWitness,
     getSignalByName,
@@ -7,7 +7,7 @@ import {
     genRandomSalt,
     stringifyBigInts,
     hash2,
-} from './utils'
+} from '../utils'
 
 import {
     IncrementalQuinTree,
@@ -37,18 +37,11 @@ describe('NDF drop test', () => {
 
         const root = tree.root
 
-        
-        console.log("test hash: " + hash2([BigInt(1),BigInt(1)]));
-
-
         var hashOnion = hash2([secrets[1], secrets[0]]);
-        
-        console.log(hashOnion);
         
     
         for(var i = 2; i < numLeaves; i++) {
             hashOnion = hash2([secrets[i], hashOnion])
-            console.log(hashOnion);
         }
 
 
@@ -57,6 +50,7 @@ describe('NDF drop test', () => {
             root
         })
 
+        fs.writeFileSync('input.json', JSON.stringify(circuitInputs))
         const witness = await genWitness(circuit, circuitInputs)
         const result = await getSignalByName(circuit, witness, 'main.result')
         expect(result).toEqual(hashOnion.toString())

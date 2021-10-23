@@ -55,7 +55,7 @@ npm run circom-helper
 
 ### Build circuits for the demo
 
-For the demo, we are using a tree depth of 5 (TBD). This can be configured in
+For the demo, we are using a tree depth of 3 (TBD). This can be configured in
 `circuits/zkeys.config.yml`.
 
 In `circuits/`:

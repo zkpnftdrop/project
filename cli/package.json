@@ -17,6 +17,10 @@
         "url": "https://github.com/zkpnftdrop/project/issues"
     },
     "homepage": "https://github.com/zkpnftdrop/project#readme",
+    "dependencies": {
+        "zkpnftdrop-circuits": "1.0.0",
+        "shelljs": "0.8.4"
+    },
     "devDependencies": {
         "lerna": "^4.0.0"
     }
