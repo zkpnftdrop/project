@@ -4,9 +4,9 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-      "build": "lerna run build",
-      "bootstrap": "lerna bootstrap",
-      "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "lerna run build",
+    "bootstrap": "lerna run bootstrap",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
