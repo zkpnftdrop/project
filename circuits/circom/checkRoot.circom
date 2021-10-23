@@ -2,51 +2,32 @@ pragma circom 2.0.0;
 
 include "./hasherPoseidon.circom";
 
-/*template QuinCheckRootWithSha256(levels, subLevels) {*/
-    /*// Given a quin Merkle root and a list of leaves, check if the root is the*/
-    /*// correct result of inserting all the leaves into the tree in the given*/
-    /*// order. Uses SHA256 instead of Poseidon to hash levels up to subLevels*/
+template CheckRoot(levels) {
+    // Given a Merkle root and a list of leaves, check if the root is the
+    // correct result of inserting all the leaves into the tree (in the given
+    // order)
 
-    /*assert(levels > 0);*/
-    /*assert(subLevels <= levels);*/
-    /*var LEAVES_PER_NODE = 5;*/
+    // Circom has some perticularities which limit the code patterns we can
+    // use.
 
-    /*// The total number of leaves*/
-    /*var totalLeaves = LEAVES_PER_NODE ** levels;*/
+    // You can only assign a value to a signal once.
 
-    /*signal input leaves[totalLeaves];*/
-    /*signal output root;*/
+    // A component's input signal must only be wired to another component's output
+    // signal.
 
-    /*// The total number of hashers*/
-    /*var numHashers = 0;*/
-    /*for (var i = 0; i < levels; i ++) {*/
-        /*numHashers += LEAVES_PER_NODE ** i;*/
-    /*}*/
-
-    /*// The number of SHA256 hashers*/
-    /*var numShaHashers = 0;*/
-    /*for (var i = 0; i < subLevels; i ++) {*/
-        /*numShaHashers += LEAVES_PER_NODE ** i;*/
-    /*}*/
-
-    /*var numPoseidonHashers = numHashers - numShaHashers;*/
-
-
-/*}*/
-
-template QuinCheckRoot(levels) {
-    // Given a quin Merkle root and a list of leaves, check if the root is the
-    // correct result of inserting all the leaves into the tree in the given
-    // order.
-
-    var LEAVES_PER_NODE = 5;
+    // Variables are only used for loops, declaring sizes of things, and anything
+    // that is not related to inputs of a circuit.
 
     // The total number of leaves
-    var totalLeaves = LEAVES_PER_NODE ** levels;
+    var totalLeaves = 2 ** levels;
 
-    // The number of Hasher5 components which will be used to hash the
+    // The number of HashLeftRight components which will be used to hash the
     // leaves
-    var numLeafHashers = LEAVES_PER_NODE ** (levels - 1);
+    var numLeafHashers = totalLeaves / 2;
+
+    // The number of HashLeftRight components which will be used to hash the
+    // output of the leaf hasher components
+    var numIntermediateHashers = numLeafHashers - 1;
 
     // Inputs to the snark
     signal input leaves[totalLeaves];
@@ -54,36 +35,28 @@ template QuinCheckRoot(levels) {
     // The output
     signal output root;
 
-    var i;
-    var j;
-
     // The total number of hashers
-    var numHashers = 0;
-    for (i = 0; i < levels; i ++) {
-        numHashers += LEAVES_PER_NODE ** i;
-    }
-
+    var numHashers = totalLeaves - 1;
     component hashers[numHashers];
 
     // Instantiate all hashers
-    for (i = 0; i < numHashers; i ++) {
-        hashers[i] = Hasher5();
+    var i;
+    for (i=0; i < numHashers; i++) {
+        hashers[i] = HashLeftRight();
     }
 
     // Wire the leaf values into the leaf hashers
-    for (i = 0; i < numLeafHashers; i ++){
-        for (j = 0; j < LEAVES_PER_NODE; j ++){
-            hashers[i].in[j] <== leaves[i * LEAVES_PER_NODE + j];
-        }
+    for (i=0; i < numLeafHashers; i++){
+        hashers[i].left <== leaves[i*2];
+        hashers[i].right <== leaves[i*2+1];
     }
 
     // Wire the outputs of the leaf hashers to the intermediate hasher inputs
     var k = 0;
-    for (i = numLeafHashers; i < numHashers; i ++) {
-        for (j = 0; j < LEAVES_PER_NODE; j ++){
-            hashers[i].in[j] <== hashers[k * LEAVES_PER_NODE + j].hash;
-        }
-        k ++;
+    for (i=numLeafHashers; i<numLeafHashers + numIntermediateHashers; i++) {
+        hashers[i].left <== hashers[k*2].hash;
+        hashers[i].right <== hashers[k*2+1].hash;
+        k++;
     }
 
     // Wire the output of the final hash to this circuit's output

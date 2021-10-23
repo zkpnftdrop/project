@@ -19,10 +19,15 @@
     },
     "homepage": "https://github.com/zkpnftdrop/project#readme",
     "dependencies": {
+        "axios": "^0.23.0",
+        "circomlibjs": "^0.0.8",
+        "crypto": "^1.0.1",
+        "ffjavascript": "^0.2.39",
         "snarkjs": "0.4.10",
         "ts-jest": "^27.0.7"
     },
     "devDependencies": {
+        "@types/jest": "^27.0.2",
         "circom-helper": "^0.3.0",
         "jest": "^27.3.1",
         "lerna": "^4.0.0",

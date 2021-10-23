@@ -11,6 +11,7 @@
         "noFallthroughCasesInSwitch": true,
         "sourceMap": true,
         "strict": true,
+        "esModuleInterop": false,
         "outDir": "./build"
     },
     "exclude": [
