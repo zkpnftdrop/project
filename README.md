@@ -71,3 +71,17 @@ Export the verifier contract:
 ```
 npm run export-verifier-sol
 ```
+
+### Contract development
+
+To compile contracts, navigate to `./contracts` and run:
+
+```bash
+npx hardhat compile
+```
+
+To test contracts, run:
+
+```bash
+npx hardhat test
+```
