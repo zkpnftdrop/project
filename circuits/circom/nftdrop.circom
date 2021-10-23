@@ -21,9 +21,14 @@ template NftDrop(levels) {
 
     // For each leaf, pass it into checkroot
     // Constraint: root === checkroot.root;
+
+    component merkleHashes[numLeaves];
+    
     component checkRoot = CheckRoot(levels);
     for (var i = 0; i < numLeaves; i ++) {
-        checkRoot.leaves[i] <== randNums[i];
+        merkleHashes[i] = Hasher1();
+        merkleHashes[i].in <== randNums[i];
+        checkRoot.leaves[i] <== merkleHashes[i].hash;
     }
 
     root === checkRoot.root;
@@ -34,19 +39,19 @@ template NftDrop(levels) {
     
 
     var numHashes = numLeaves - 1;
-    component hashArray[numHashes];
+    component hashOnionArray[numHashes];
 
-    hashArray[0] = HashLeftRight();
-    hashArray[0].right <== randNums[0];
-    hashArray[0].left <== randNums[1];
+    hashOnionArray[0] = HashLeftRight();
+    hashOnionArray[0].right <== randNums[0];
+    hashOnionArray[0].left <== randNums[1];
     
 
     for (var i = 1; i < numHashes; i ++) {
-        hashArray[i] = HashLeftRight();
-        hashArray[i].right <== hashArray[i - 1].hash;
-        hashArray[i].left <== randNums[i + 1];
+        hashOnionArray[i] = HashLeftRight();
+        hashOnionArray[i].right <== hashOnionArray[i - 1].hash;
+        hashOnionArray[i].left <== randNums[i + 1];
     }
 
-    result <== hashArray[numHashes - 1].hash;
+    result <== hashOnionArray[numHashes - 1].hash;
 
 }
