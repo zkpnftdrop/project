@@ -2,6 +2,8 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
+import { IVerifier } from "./IVerifier.sol";
+
 library Pairing {
 
     uint256 constant PRIME_Q = 21888242871839275222246405745257275088696311157297823662689037894645226208583;
@@ -124,7 +126,7 @@ library Pairing {
     }
 }
 
-contract Verifier {
+contract Verifier is IVerifier {
     struct Proof {
         Pairing.G1Point a;
         Pairing.G2Point b;
@@ -162,7 +164,7 @@ contract Verifier {
     function verify(
         uint256[8] memory _proof,
         uint256[<%vk_input_length%>] memory input
-    ) public view returns (bool) {
+    ) override public view returns (bool) {
         VerifyingKey memory vk = verifyingKey();
         Proof memory proof;
         proof.a = Pairing.G1Point(_proof[0], _proof[1]);
