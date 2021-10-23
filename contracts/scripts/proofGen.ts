@@ -6,6 +6,7 @@ import {
     hash2,
     IncrementalQuinTree,
     stringifyBigInts,
+// @ts-ignore
 } from 'zkpnftdrop-circuits'
 
 const proofGen = async (

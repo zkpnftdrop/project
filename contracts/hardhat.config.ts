@@ -7,6 +7,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-artifactor";
 import "solidity-coverage";
+import "hardhat-artifactor";
 
 dotenv.config();
 
