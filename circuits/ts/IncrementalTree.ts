@@ -259,13 +259,13 @@ const _verifyMerklePath = (
     }
 
     // Hash the first level
-    const firstLevel: BigInt[] = pathElements[0].map(BigInt)
+    const firstLevel: BigInt[] = pathElements[0].map((x) => BigInt(x.toString()))
     firstLevel.splice(Number(_proof.indices[0]), 0, _proof.leaf)
     let currentLevelHash: BigInt = _hashFunc(firstLevel)
 
     // Verify the proof
     for (let i = 1; i < pathElements.length; i ++) {
-        const level: BigInt[] = pathElements[i].map(BigInt)
+        const level: BigInt[] = pathElements[i].map((x) => BigInt(x.toString()))
         level.splice(Number(_proof.indices[i]), 0, currentLevelHash)
 
         currentLevelHash = _hashFunc(level)
@@ -329,7 +329,7 @@ class IncrementalQuinTree {
         assert(this.depth > 0)
 
         this.nextIndex = 0
-        this.zeroValue = BigInt(_zeroValue)
+        this.zeroValue = BigInt(_zeroValue.toString())
 
         this.hashFunc = _hashFunc
 
@@ -355,7 +355,7 @@ class IncrementalQuinTree {
         _value: Leaf,
     ) {
         // Ensure that _value is a BigInt
-        _value = BigInt(_value)
+        _value = BigInt(_value.toString())
 
         // A node is one level above the leaf
         // m is the leaf's relative position within its node
@@ -397,7 +397,7 @@ class IncrementalQuinTree {
             throw new Error('The leaf index specified is too large')
         }
 
-        _value = BigInt(_value)
+        _value = BigInt(_value.toString())
 
         const temp = this.leaves
         temp[_index] = _value
@@ -587,7 +587,7 @@ class MultiIncrementalQuinTree {
         assert(this.depth > 0)
 
         this.nextIndex = 0
-        this.zeroValue = BigInt(_zeroValue)
+        this.zeroValue = BigInt(_zeroValue.toString())
 
         this.hashFunc = _hashFunc
 
@@ -629,7 +629,7 @@ class MultiIncrementalQuinTree {
             this.roots.push(r.root)
         }
         // Ensure that _value is a BigInt
-        _value = BigInt(_value)
+        _value = BigInt(_value.toString())
 
         // A node is one level above the leaf
         // m is the leaf's relative position within its node
@@ -671,7 +671,7 @@ class MultiIncrementalQuinTree {
             throw new Error('The leaf index specified is too large')
         }
 
-        _value = BigInt(_value)
+        _value = BigInt(_value.toString())
 
         const capacity = this.leavesPerNode ** this.depth
         const treeNum = _absoluteIndex % capacity
