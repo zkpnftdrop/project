@@ -13,7 +13,8 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
         uint256 tokenId;
     }
 
-    uint256 internal constant ZERO_VALUE = uint256(keccak256(abi.encodePacked('Maci'))) % SNARK_SCALAR_FIELD;
+    // The PoseidonT2 hash of [0]
+    uint256 internal constant ZERO_VALUE = uint256(19014214495641488759237505126948346942972912379615652741039992445865937985820);
     uint32 internal MAX_MINTERS = 7;
     uint32 internal VERIFY_PERIOD = 8000;
 
@@ -36,7 +37,7 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
         IVerifier _verifier
     )
     ERC721("ZKPNFTDrop", "ZKPNFT$")
-    IncrementalMerkleTree(3, ZERO_VALUE, true)
+    IncrementalMerkleTree(3, ZERO_VALUE, false)
     {
         price = _price;
         hashOfTeamSecret = _hashOfTeamSecret;

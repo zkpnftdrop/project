@@ -1,24 +1,25 @@
+import * as hre from "hardhat";
+import { ZKPNFTDrop } from "../typechain";
+import {BigNumber, Signer} from "ethers";
+import * as chai from "chai";
+import * as fs from "fs";
+
 // @ts-ignore
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+
 import {
   IncrementalQuinTree,
   hash2,
-  stringifyBigInts
-// @ts-ignore
+  hash1,
+  stringifyBigInts,
+  genHashOnion,
+  // @ts-ignore
 } from "zkpnftdrop-circuits";
 
-import * as chai from "chai";
-import * as fs from "fs";
 const chaiAsPromised = require("chai-as-promised");
+const ethers = hre.ethers;
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-
-import * as hre from "hardhat";
-const ethers = hre.ethers;
-import { ZKPNFTDrop } from "../typechain";
-import {BigNumber, Signer} from "ethers";
-// @ts-ignore
-import { poseidon } from "circomlibjs";
-import {HardhatRuntimeEnvironment} from "hardhat/types";
 
 // from https://github.com/atixlabs/hardhat-time-n-mine
 const mineOneBlock = async (hre: HardhatRuntimeEnvironment) =>
@@ -50,7 +51,7 @@ describe("ZKP NFT Drop", function () {
 
   const price = 9999;
   const teamSecret = 10000;
-  const hashOfTeamSecret = poseidon([teamSecret]);
+  const hashOfTeamSecret = hash1([teamSecret]);
   const buyDeadline = 1000;
 
   beforeEach(async function () {
@@ -59,7 +60,7 @@ describe("ZKP NFT Drop", function () {
     const poseidon = await Poseidon.deploy();
     await poseidon.deployed();
 
-    const Verifier = await ethers.getContractFactory("MockVerifier", creator);
+    const Verifier = await ethers.getContractFactory("TestVerifier", creator);
     const verifier = await Verifier.deploy();
     await verifier.deployed();
 
@@ -87,14 +88,14 @@ describe("ZKP NFT Drop", function () {
   it("can buy", async function () {
     await contract.deployed();
     const minter1Secret = 1888;
-    const hashOMinter1Secret = poseidon([minter1Secret]);
+    const hashOMinter1Secret = hash1([minter1Secret]);
 
     expect(await contract.numberOfMinters()).to.equal(0);
     await contract.connect(addr1).buy(hashOMinter1Secret, { value: price });
     expect(await contract.numberOfMinters()).to.equal(1);
 
     const minter2Secret = 2888;
-    const hashOMinter2Secret = poseidon([minter2Secret]);
+    const hashOMinter2Secret = hash1([minter2Secret]);
 
     await contract.connect(addr2).buy(hashOMinter2Secret, { value: price });
     expect(await contract.numberOfMinters()).to.equal(2);
@@ -103,7 +104,7 @@ describe("ZKP NFT Drop", function () {
   it("cannot buy without paying", async function () {
     await contract.deployed();
     const minter1Secret = 1888;
-    const hashOMinter1Secret = poseidon([minter1Secret]);
+    const hashOMinter1Secret = hash1([minter1Secret]);
     await expect(
       contract.connect(addr1).buy(hashOMinter1Secret, { value: price - 1 })
     ).to.eventually.be.rejected;
@@ -114,46 +115,65 @@ describe("ZKP NFT Drop", function () {
     await contract.deployed();
 
     const minter1Secret = 1888;
-    const hashOMinter1Secret = poseidon([minter1Secret]);
+    const hashOMinter1Secret = hash1([minter1Secret]);
     await contract.connect(addr1).buy(hashOMinter1Secret, { value: price });
 
     const minter2Secret = 2888;
-    const hashOMinter2Secret = poseidon([minter2Secret]);
+    const hashOMinter2Secret = hash1([minter2Secret]);
     await contract.connect(addr2).buy(hashOMinter2Secret, { value: price });
 
     const minter3Secret = 3888;
-    const hashOMinter3Secret = poseidon([minter3Secret]);
+    const hashOMinter3Secret = hash1([minter3Secret]);
     await contract.connect(addr3).buy(hashOMinter3Secret, { value: price });
 
     await mine(hre)(buyDeadline);
 
     const LEVELS = 3;
-    const ZERO_VALUE = BigInt("8370432830353022751713833565135785980866757267633941821328460903436894336785");
+    const ZERO_VALUE = BigInt(0);
 
     const tree = new IncrementalQuinTree(LEVELS, ZERO_VALUE, 2, hash2);
     tree.insert(hashOfTeamSecret);
     tree.insert(hashOMinter1Secret);
     tree.insert(hashOMinter2Secret);
     tree.insert(hashOMinter3Secret);
+    tree.insert(hash1([ZERO_VALUE]));
+    tree.insert(hash1([ZERO_VALUE]));
+    tree.insert(hash1([ZERO_VALUE]));
+    tree.insert(hash1([ZERO_VALUE]));
 
-      const circuitInputs = stringifyBigInts({
-        root: tree.root,
-        randNums: [
-          hashOfTeamSecret,
-          hashOMinter1Secret,
-          hashOMinter2Secret,
-          hashOMinter3Secret,
-          ZERO_VALUE,
-          ZERO_VALUE,
-          ZERO_VALUE,
-          ZERO_VALUE,
-        ],
-      });
-    fs.writeFileSync("testInput.json", JSON.stringify(circuitInputs));
+    expect(await contract.root()).to.equal(tree.root);
+    const randNums = [
+        teamSecret,
+        minter1Secret,
+        minter2Secret,
+        minter3Secret,
+        ZERO_VALUE,
+        ZERO_VALUE,
+        ZERO_VALUE,
+        ZERO_VALUE,
+    ].map((x) => x.toString())
 
+    const circuitInputs = stringifyBigInts({
+      randNums,
+      root: tree.root,
+    });
+    fs.writeFileSync("input.json", JSON.stringify(circuitInputs));
 
-    const result = 909090;
-    const zkp = [0, 0, 0, 0, 0, 0, 0, 0].map((x) => ethers.BigNumber.from(x));
+    const result = genHashOnion(randNums);
+
+    const zkp = [
+        "846400121213406487964685232890528083629439740021375953073524691579512450339",  // a0
+        "6320579568828324268425971843668008577172629299864868075857422617578976175186", // a1
+
+        "5081999809014330757910749462823652376910386431969478601092965136049138952899",  // b01
+        "677350940708847790327167481985113117010277348724001883743116207170760459473",   // b00
+        "19812731417442109423029774596774984937251730136111195964592107604245793594275", // b11
+        "14112428479020884408350756678640393572113981123338043946389271584445845936777", // b10
+        
+        "16262398447770972434745981312703578314371702066063024517196898203573448827597", // c0
+        "16906950376228888199307951005374296884724412383507704409706432165298442618925", // c1
+
+    ].map((x) => ethers.BigNumber.from(x));
 
     // @ts-ignore
     await contract.connect(creator).verify(result, zkp);
