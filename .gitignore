@@ -2,3 +2,4 @@ node_modules
 circomHelperConfig.json
 circuits/circomHelperConfig.json
 **/build/
+contracts/dist
