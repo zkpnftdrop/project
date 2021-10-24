@@ -21,6 +21,14 @@ task("deploy", "deploy nft")
         PoseidonT3: poseidon.address,
       },
     });
+
+    // For reference
+    //constructor(
+        //uint256 _price,
+        //uint256 _hashOfTeamSecret,
+        //uint256 _buyDeadline,
+        //IVerifier _verifier
+    //)
     const nft = await NFT.connect(signers[parseInt(taskArgs.signer)]).deploy(
       9999,
       10000,

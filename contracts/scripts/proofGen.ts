@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 // @ts-ignore
-import { hash2, IncrementalQuinTree, stringifyBigInts } from "zkpnftdrop-circuits";
+import { hash2, IncrementalQuinTree, stringifyBigInts, unstringifyBigInts } from "zkpnftdrop-circuits";
 
 const proofGen = async (
   depth: Number,
@@ -53,9 +53,23 @@ const proofGen = async (
     return;
   }
 
+  const proof = unstringifyBigInts(
+    JSON.parse(
+      fs.readFileSync(proofPath).toString()
+    )
+  );
+
+  const publicInputs = unstringifyBigInts(
+    JSON.parse(
+      fs.readFileSync(publicInputsPath).toString()
+    )
+  );
+
   const thisDir = path.join(__dirname, "..");
   shelljs.mv(proofPath, thisDir);
   shelljs.mv(publicInputsPath, thisDir);
+
+  return { proof, publicInputs }
 };
 
 if (require.main === module) {

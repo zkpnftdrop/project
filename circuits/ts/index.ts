@@ -6,6 +6,7 @@ import {
     hash1,
     hash2,
     stringifyBigInts,
+    unstringifyBigInts,
 } from './utils'
 
 const genHashOnion = (
@@ -24,5 +25,6 @@ export {
     hash1,
     hash2,
     stringifyBigInts,
+    unstringifyBigInts,
     genHashOnion,
 }

@@ -8,6 +8,7 @@ import {
 
 const ff = require('ffjavascript')
 const stringifyBigInts: (obj: object) => any = ff.utils.stringifyBigInts
+const unstringifyBigInts: (obj: object) => any = ff.utils.unstringifyBigInts
 
 import { poseidon } from 'circomlibjs'
 
@@ -64,4 +65,5 @@ export {
     hash2,
     hash5,
     stringifyBigInts,
+    unstringifyBigInts,
 }
