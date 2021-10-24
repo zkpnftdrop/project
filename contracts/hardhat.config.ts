@@ -12,6 +12,7 @@ import "solidity-coverage";
 import "./tasks/deploy";
 import "./tasks/buy";
 import "./tasks/verify";
+import "./tasks/list";
 
 dotenv.config();
 

@@ -40,7 +40,6 @@ const mine = (hre: HardhatRuntimeEnvironment) => async (amount: number) => {
 };
 
 describe("ZKP NFT Drop", function () {
-
   let factory;
   let contract: ZKPNFTDrop;
   let creator: Signer;
@@ -174,6 +173,7 @@ describe("ZKP NFT Drop", function () {
         "16906950376228888199307951005374296884724412383507704409706432165298442618925", // c1
 
     ].map((x) => ethers.BigNumber.from(x));
+    fs.writeFileSync("testInput.json", JSON.stringify(circuitInputs));
 
     // @ts-ignore
     await contract.connect(creator).verifyMint(result, zkp);

@@ -15,4 +15,4 @@ npx hardhat compile
 
 # Build the Poseidon contract from bytecode
 npm run build
-npx hardhat run ./scripts/buildPoseidon.js
+npx hardhat run ./scripts/buildPoseidon.ts

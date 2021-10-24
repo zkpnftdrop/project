@@ -5,7 +5,6 @@
     "main": "build/index.js",
     "scripts": {
         "build": "tsc",
-        "compileSol": "hardhat compile && hardhat run scripts/buildPoseidon.ts",
         "watch": "tsc --watch",
         "test": "hardhat test"
     },
