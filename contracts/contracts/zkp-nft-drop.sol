@@ -61,7 +61,7 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
         insertLeaf(hashOfSecret);
     }
 
-    function verify(
+    function verifyMint(
         uint256 result,
         uint256[8] memory proof
     ) public {

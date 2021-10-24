@@ -10,7 +10,7 @@ const proofGen = async (
   randNums: bigint[],
   rapidsnarkBinPath: string,
   circuitsPath: string
-) => {
+): Promise<{ proof: bigint[], publicInputs: bigint[] } | undefined> => {
   const inputJsonPath = "input.json";
   const wtnsPath = "witness.wtns";
   const proofPath = "proof.json";

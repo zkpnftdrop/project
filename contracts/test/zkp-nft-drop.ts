@@ -176,6 +176,6 @@ describe("ZKP NFT Drop", function () {
     ].map((x) => ethers.BigNumber.from(x));
 
     // @ts-ignore
-    await contract.connect(creator).verify(result, zkp);
+    await contract.connect(creator).verifyMint(result, zkp);
   });
 });
