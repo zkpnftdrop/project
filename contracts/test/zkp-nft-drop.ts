@@ -2,23 +2,23 @@
 import {
   IncrementalQuinTree,
   hash2,
-  stringifyBigInts
-// @ts-ignore
+  stringifyBigInts,
+  // @ts-ignore
 } from "zkpnftdrop-circuits";
 
 import * as chai from "chai";
 import * as fs from "fs";
+
+import * as hre from "hardhat";
+import { ZKPNFTDrop } from "../typechain";
+import { BigNumber, Signer } from "ethers";
+// @ts-ignore
+import { poseidon } from "circomlibjs";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-
-import * as hre from "hardhat";
 const ethers = hre.ethers;
-import { ZKPNFTDrop } from "../typechain";
-import {BigNumber, Signer} from "ethers";
-// @ts-ignore
-import { poseidon } from "circomlibjs";
-import {HardhatRuntimeEnvironment} from "hardhat/types";
 
 // from https://github.com/atixlabs/hardhat-time-n-mine
 const mineOneBlock = async (hre: HardhatRuntimeEnvironment) =>
@@ -39,7 +39,6 @@ const mine = (hre: HardhatRuntimeEnvironment) => async (amount: number) => {
 };
 
 describe("ZKP NFT Drop", function () {
-
   let factory;
   let contract: ZKPNFTDrop;
   let creator: Signer;
@@ -128,7 +127,9 @@ describe("ZKP NFT Drop", function () {
     await mine(hre)(buyDeadline);
 
     const LEVELS = 3;
-    const ZERO_VALUE = BigInt("8370432830353022751713833565135785980866757267633941821328460903436894336785");
+    const ZERO_VALUE = BigInt(
+      "8370432830353022751713833565135785980866757267633941821328460903436894336785"
+    );
 
     const tree = new IncrementalQuinTree(LEVELS, ZERO_VALUE, 2, hash2);
     tree.insert(hashOfTeamSecret);
@@ -136,21 +137,20 @@ describe("ZKP NFT Drop", function () {
     tree.insert(hashOMinter2Secret);
     tree.insert(hashOMinter3Secret);
 
-      const circuitInputs = stringifyBigInts({
-        root: tree.root,
-        randNums: [
-          hashOfTeamSecret,
-          hashOMinter1Secret,
-          hashOMinter2Secret,
-          hashOMinter3Secret,
-          ZERO_VALUE,
-          ZERO_VALUE,
-          ZERO_VALUE,
-          ZERO_VALUE,
-        ],
-      });
+    const circuitInputs = stringifyBigInts({
+      root: tree.root,
+      randNums: [
+        hashOfTeamSecret,
+        hashOMinter1Secret,
+        hashOMinter2Secret,
+        hashOMinter3Secret,
+        ZERO_VALUE,
+        ZERO_VALUE,
+        ZERO_VALUE,
+        ZERO_VALUE,
+      ],
+    });
     fs.writeFileSync("testInput.json", JSON.stringify(circuitInputs));
-
 
     const result = 909090;
     const zkp = [0, 0, 0, 0, 0, 0, 0, 0].map((x) => ethers.BigNumber.from(x));

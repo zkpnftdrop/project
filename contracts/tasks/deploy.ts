@@ -29,5 +29,5 @@ task("deploy", "deploy nft")
     );
     await nft.deployed();
 
-    console.log("NFT deployed to:", nft.address);
+    console.log(nft.address);
   });

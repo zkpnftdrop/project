@@ -22,7 +22,7 @@ contract ZKPNFTDrop is ERC721, IncrementalMerkleTree {
 
     uint256 public buyDeadline;
 
-    mapping (uint => Minter) minters;
+    mapping (uint => Minter) public minters;
 
     using Counters for Counters.Counter;
     Counters.Counter mintersCounter;
