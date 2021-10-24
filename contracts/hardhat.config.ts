@@ -7,7 +7,10 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-artifactor";
 import "solidity-coverage";
-import "hardhat-artifactor";
+
+import "./tasks/deploy";
+import "./tasks/buy";
+import "./tasks/verify";
 
 dotenv.config();
 
@@ -26,7 +29,15 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
+  defaultNetwork: "localhost",
   networks: {
+    localhost: {
+      url: "http://localhost:8545",
+      /*
+        notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
+        (you can put in a mnemonic here to set the deployer locally)
+      */
+    },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts:
