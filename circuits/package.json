@@ -9,7 +9,7 @@
         "zkey-manager-downloadPtau": "zkey-manager downloadPtau -c ./zkeys.config.yml",
         "zkey-manager-genZkeys": "zkey-manager genZkeys -c ./zkeys.config.yml",
         "export-verifier-sol": "node build/exportVerifier.js ./zkeys/NftDrop_3_prod.0.zkey ../contracts/contracts/verifier.sol",
-        "export-test-verifier-sol": "node build/exportVerifier.js ./zkeys/NftDrop_3_test.0.zkey ../contracts/contracts/verifier.sol",
+        "export-test-verifier-sol": "node build/exportVerifier.js ./zkeys/NftDrop_3_test.0.zkey ../contracts/contracts/testverifier.sol",
         "build": "tsc",
         "watch": "tsc --watch",
         "test": "jest --runInBand"

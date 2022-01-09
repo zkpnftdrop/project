@@ -7,10 +7,12 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-artifactor";
 import "solidity-coverage";
+//import "@nomiclabs/hardhat-ethers";
 
 import "./tasks/deploy";
 import "./tasks/buy";
 import "./tasks/verify";
+import "./tasks/list";
 
 dotenv.config();
 
